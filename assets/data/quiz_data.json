@@ -1,0 +1,117 @@
+[
+    {
+        "question_id" : 1,
+        "question" : "Python is _____ programming language.",
+        "time" : 30,
+        "options" : [
+            {
+                "option" : "High-level",
+                "correct" : true
+            },
+            {
+                "option" : "Mid-level",
+                "correct" : false
+            },
+            {
+                "option" : "Low-level",
+                "correct" : false
+            },
+            {
+                "option" : "None of the above",
+                "correct" : false
+            }
+        ]
+    },
+    {
+        "question_id" : 2,
+        "question" : "WhatsApp concurrent model is implemented using _____ programming language.",
+        "time" : 25,
+        "options" : [
+            {
+                "option" : "Java",
+                "correct" : false
+            },
+            {
+                "option" : "Node.js",
+                "correct" : false
+            },
+            {
+                "option" : "Erlang",
+                "correct" : true
+            },
+            {
+                "option" : "C",
+                "correct" : false
+            }
+        ]
+    },
+    {
+        "question_id" : 3,
+        "question" : "Which of the following is not a programming language?.",
+        "time" : 20,
+        "options" : [
+            {
+                "option" : "TypeScript",
+                "correct" : false
+            },
+            {
+                "option" : "Python",
+                "correct" : false
+            },
+            {
+                "option" : "Anaconda",
+                "correct" : true
+            },
+            {
+                "option" : "Java",
+                "correct" : false
+            }
+        ]
+    },
+    {
+        "question_id" : 4,
+        "question" : "Which of the following includes Chrome's V8 JavaScript Engine?",
+        "time" : 15,
+        "options" : [
+            {
+                "option" : "jQuery",
+                "correct" : false
+            },
+            {
+                "option" : "Java",
+                "correct" : false
+            },
+            {
+                "option" : "npm",
+                "correct" : false
+            },
+            {
+                "option" : "Node.js",
+                "correct" : true
+            }
+        ]
+    },
+    {
+        "question_id" : 5,
+        "question" : "Which of the following is not a type of computer code related to Program Execution?",
+        "time" : 13,
+        "options" : [
+            {
+                "option" : "Source Code",
+                "correct" : false
+            },
+            {
+                "option" : "Bytecode",
+                "correct" : false
+            },
+            {
+                "option" : "Machine Code",
+                "correct" : false
+            },
+            {
+                "option" : "Hex Code",
+                "correct" : true
+            }
+        ]
+    }
+]
