@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:quiz_app/models/json_model.dart';
 
 Timer? pageNaviTimer;
 showAnsStatusPopUp(String? status, Color? color, BuildContext context) {
@@ -30,7 +31,8 @@ AnimationController? controller;
 late Animation<double> valAnimation;
 
 class DataModel extends ChangeNotifier {
-  List baseData = [];
+  // List baseData = [];
+  JsonModel baseData = JsonModel();
   bool isBtnPressed = false;
   bool colorChange = false;
   double containerWidth = 0;
@@ -42,9 +44,9 @@ class DataModel extends ChangeNotifier {
   int crctAns = 0, wrngAns = 0;
 
   Future<void> readJson() async {
-    String response = await rootBundle.loadString('assets/data/quiz_data.json');
-    final data = await json.decode(response);
-    baseData = data;
+    final response = await rootBundle.loadString('assets/data/quiz_data.json');
+    final data = json.decode(response);
+    baseData = JsonModel.fromJson(data);
     notifyListeners();
   }
 
@@ -100,7 +102,7 @@ class DataModel extends ChangeNotifier {
   }
 
   void changeQuestNo() {
-    if (questionNo <= baseData.length) {
+    if (questionNo <= baseData.quizData!.length) {
       questionNo++;
     } else {
       questionNo = 1;

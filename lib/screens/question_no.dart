@@ -23,7 +23,7 @@ class _QuestionNumberState extends State<QuestionNumber> {
               context,
               PageTransition(
                   child: widget.questionNo! <=
-                          context.read<DataModel>().baseData.length
+                          context.read<DataModel>().baseData.quizData!.length
                       ? Home(
                           questionNo: context.read<DataModel>().questionNo,
                         )
@@ -46,7 +46,8 @@ class _QuestionNumberState extends State<QuestionNumber> {
       backgroundColor: Colors.purple[900],
       body: Center(
         child: Text(
-          widget.questionNo! <= context.read<DataModel>().baseData.length
+          widget.questionNo! <=
+                  context.read<DataModel>().baseData.quizData!.length
               ? "${widget.questionNo}"
               : "THE END",
           style: const TextStyle(

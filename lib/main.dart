@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/models/data_model.dart';
 import 'package:quiz_app/screens/countdown.dart';
-import 'package:quiz_app/screens/question_no.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -16,6 +16,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: CountDown(),

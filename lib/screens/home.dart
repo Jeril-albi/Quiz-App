@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/models/data_model.dart';
+import 'package:quiz_app/models/json_model.dart';
 import 'package:quiz_app/screens/question_no.dart';
 import 'package:quiz_app/widgets/question_card.dart';
 
@@ -40,8 +41,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
     controller = AnimationController(
         duration: Duration(
-            seconds: context.read<DataModel>().baseData[widget.questionNo! - 1]
-                ['time']),
+            seconds: context
+                .read<DataModel>()
+                .baseData
+                .quizData![widget.questionNo! - 1]
+                .time!),
         vsync: this);
     valAnimation = Tween(begin: 1.0, end: 0.0).animate(controller!)
       ..addListener(() {
@@ -50,8 +54,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     controller!.repeat();
     pageNaviTimer = Timer(
         Duration(
-            seconds: context.read<DataModel>().baseData[widget.questionNo! - 1]
-                ['time']), () {
+            seconds: context
+                .read<DataModel>()
+                .baseData
+                .quizData![widget.questionNo! - 1]
+                .time!), () {
       nonAnsSelect();
     });
   }
@@ -66,8 +73,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final List data = context.watch<DataModel>().baseData;
-    final List optiondata = data[widget.questionNo! - 1]['options'];
+    final JsonModel data = context.read<DataModel>().baseData;
     return Scaffold(
         body: SafeArea(
             child: Container(
@@ -99,7 +105,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             borderRadius: BorderRadius.circular(5)),
                         margin: const EdgeInsets.only(right: 5),
                         child: Center(
-                          child: Text('${widget.questionNo}/${data.length}',
+                          child: Text(
+                              '${widget.questionNo}/${data.quizData!.length}',
                               style: const TextStyle(
                                 color: Colors.white,
                               )),
@@ -251,7 +258,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
                   child: Text(
-                    "${data[widget.questionNo! - 1]['question']}",
+                    "${data.quizData![widget.questionNo! - 1].question}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                         color: Colors.white,
@@ -261,11 +268,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: optiondata.length,
+                  itemCount:
+                      data.quizData![widget.questionNo! - 1].options!.length,
                   itemBuilder: (_, index) => QuestionCard(
                     index: index,
-                    optionName: "${optiondata[index]['option']}",
-                    correctAnswer: optiondata[index]['correct'],
+                    optionName:
+                        "${data.quizData![widget.questionNo! - 1].options![index].option}",
+                    correctAnswer: data.quizData![widget.questionNo! - 1]
+                        .options![index].correct,
                     questNo: widget.questionNo,
                   ),
                 ),
