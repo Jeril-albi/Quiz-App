@@ -50,15 +50,6 @@ class _QuestionCardState extends State<QuestionCard> {
     }
   }
 
-  int? checkCorrectIndex() {
-    for (int i = 0; i < context.read<DataModel>().baseData.length; i++) {
-      if (context.read<DataModel>().baseData[widget.index!]['options'][i]
-          ['correct']) {
-        return i;
-      }
-    }
-  }
-
   bool? checkVisibility() {
     if (widget.index == selectedIndex) {
       return true;
@@ -67,31 +58,11 @@ class _QuestionCardState extends State<QuestionCard> {
     }
   }
 
-  showAnsStatusPopUp(String? status, Color? color) {
-    return showModalBottomSheet(
-        barrierColor: Colors.transparent,
-        useRootNavigator: true,
-        context: context,
-        builder: (_) => Container(
-              width: double.infinity,
-              height: 50,
-              color: color,
-              child: Center(
-                child: Text(
-                  status!,
-                  style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-              ),
-            ));
-  }
-
   void ansBtnClick(int index) async {
     setState(() {
       selectedIndex = index;
     });
+    controller!.stop();
     if (context.read<DataModel>().isBtnPressed) {
     } else {
       pageNaviTimer!.cancel();
@@ -101,25 +72,25 @@ class _QuestionCardState extends State<QuestionCard> {
       await Future.delayed(const Duration(seconds: 1));
       context.read<DataModel>().btnColorChange(true);
       if (widget.correctAnswer!) {
-        showAnsStatusPopUp("Correct", Colors.green);
+        showAnsStatusPopUp("Correct", Colors.green, context);
         context.read<DataModel>().changeContainerWidth(widget.correctAnswer!);
         context.read<DataModel>().rankChange();
       } else {
         context.read<DataModel>().wrongAnsCheck(true);
-        showAnsStatusPopUp("Wrong", Colors.redAccent.shade700);
+        showAnsStatusPopUp("Wrong", Colors.redAccent.shade700, context);
         context.read<DataModel>().changeContainerWidth(widget.correctAnswer!);
       }
 
       await Future.delayed(const Duration(seconds: 2));
-      await Navigator.pushReplacement(
-          context,
-          PageTransition(
-              child: QuestionNumber(
-                  questionNo: context.read<DataModel>().questionNo),
-              type: PageTransitionType.rightToLeft,
-              duration: const Duration(milliseconds: 800)));
-      context.read<DataModel>().btnPressed(false);
-      context.read<DataModel>().btnColorChange(false);
+      await Navigator.pushAndRemoveUntil(
+        context,
+        PageTransition(
+            child: QuestionNumber(
+                questionNo: context.read<DataModel>().questionNo),
+            type: PageTransitionType.rightToLeft,
+            duration: const Duration(milliseconds: 800)),
+        (route) => false,
+      );
     }
   }
 

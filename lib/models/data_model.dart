@@ -1,10 +1,33 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 Timer? pageNaviTimer;
+showAnsStatusPopUp(String? status, Color? color, BuildContext context) {
+  return showModalBottomSheet(
+      barrierColor: Colors.transparent,
+      useRootNavigator: true,
+      context: context,
+      builder: (_) => Container(
+            width: double.infinity,
+            height: 50,
+            color: color,
+            child: Center(
+              child: Text(
+                status!,
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            ),
+          ));
+}
+
+AnimationController? controller;
+late Animation<double> valAnimation;
 
 class DataModel extends ChangeNotifier {
   List baseData = [];
@@ -99,5 +122,14 @@ class DataModel extends ChangeNotifier {
     } else {
       rank -= 2;
     }
+  }
+
+  void resetData() {
+    changeQuestNo();
+    changeContainerWidth(false);
+    rank = 0;
+    crctAns = 0;
+    wrngAns = 0;
+    score = 0;
   }
 }

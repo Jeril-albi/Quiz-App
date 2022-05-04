@@ -19,18 +19,24 @@ class _QuestionNumberState extends State<QuestionNumber> {
   void initState() {
     Timer(
         const Duration(milliseconds: 900),
-        () => Navigator.pushReplacement(
-            context,
-            PageTransition(
-                child: widget.questionNo! <=
-                        context.read<DataModel>().baseData.length
-                    ? Home(
-                        questionNo: context.read<DataModel>().questionNo,
-                      )
-                    : const Result(),
-                type: PageTransitionType.fade,
-                duration: const Duration(seconds: 2))));
+        () => Navigator.pushAndRemoveUntil(
+              context,
+              PageTransition(
+                  child: widget.questionNo! <=
+                          context.read<DataModel>().baseData.length
+                      ? Home(
+                          questionNo: context.read<DataModel>().questionNo,
+                        )
+                      : const Result(),
+                  type: PageTransitionType.fade,
+                  duration: const Duration(seconds: 2)),
+              (route) => false,
+            ));
     super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      context.read<DataModel>().btnPressed(false);
+      context.read<DataModel>().btnColorChange(false);
+    });
   }
 
   @override

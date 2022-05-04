@@ -18,14 +18,16 @@ class CountDown extends StatelessWidget {
             countdownCurrentColor: Colors.yellow,
             diameter: 300,
             textStyle: const TextStyle(color: Colors.white, fontSize: 100),
-            onFinished: () => Navigator.pushReplacement(
+            onFinished: () => Navigator.pushAndRemoveUntil(
                   context,
                   PageTransition(
-                      child: const QuestionNumber(
-                        questionNo: 1,
-                      ),
-                      type: PageTransitionType.leftToRightWithFade,
-                      duration: const Duration(milliseconds: 800)),
+                    child: const QuestionNumber(
+                      questionNo: 1,
+                    ),
+                    type: PageTransitionType.leftToRightWithFade,
+                    duration: const Duration(milliseconds: 800),
+                  ),
+                  (route) => false,
                 )),
       ),
     );

@@ -105,17 +105,16 @@ class Result extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                     onPressed: () {
-                      context.read<DataModel>().changeQuestNo();
-                      context.read<DataModel>().changeContainerWidth(false);
-                      Navigator.pushReplacement(
-                          context,
-                          PageTransition(
-                              child: QuestionNumber(
-                                  questionNo:
-                                      context.read<DataModel>().questionNo),
-                              type: PageTransitionType.rotate,
-                              alignment: Alignment.center,
-                              duration: const Duration(milliseconds: 800)));
+                      context.read<DataModel>().resetData();
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        PageTransition(
+                            child: CountDown(),
+                            type: PageTransitionType.rotate,
+                            alignment: Alignment.center,
+                            duration: const Duration(milliseconds: 800)),
+                        (route) => false,
+                      );
                     },
                     style: ElevatedButton.styleFrom(primary: Colors.purple),
                     child: const Text(

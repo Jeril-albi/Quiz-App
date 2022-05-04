@@ -17,20 +17,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  AnimationController? controller;
-
   void nonAnsSelect() async {
     context.read<DataModel>().nonAnsselected();
+    controller!.stop();
+    showAnsStatusPopUp("Time Up", Colors.redAccent.shade700, context);
     await Future.delayed(const Duration(seconds: 2));
-    Navigator.pushReplacement(
-        context,
-        PageTransition(
-            child: QuestionNumber(
-                questionNo: context.read<DataModel>().questionNo),
-            type: PageTransitionType.rightToLeft,
-            duration: const Duration(milliseconds: 800)));
     context.read<DataModel>().btnPressed(false);
     context.read<DataModel>().btnColorChange(false);
+    Navigator.pushAndRemoveUntil(
+      context,
+      PageTransition(
+          child:
+              QuestionNumber(questionNo: context.read<DataModel>().questionNo),
+          type: PageTransitionType.rightToLeft,
+          duration: const Duration(milliseconds: 800)),
+      (route) => false,
+    );
   }
 
   @override
@@ -41,6 +43,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             seconds: context.read<DataModel>().baseData[widget.questionNo! - 1]
                 ['time']),
         vsync: this);
+    valAnimation = Tween(begin: 1.0, end: 0.0).animate(controller!)
+      ..addListener(() {
+        setState(() {});
+      });
     controller!.repeat();
     pageNaviTimer = Timer(
         Duration(
@@ -53,6 +59,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     controller!.dispose();
+    valAnimation.removeStatusListener((status) {});
     super.dispose();
     pageNaviTimer!.cancel();
   }
@@ -71,25 +78,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
-                Visibility(
-                  visible:
-                      context.read<DataModel>().isBtnPressed ? false : true,
-                  maintainState: true,
-                  maintainAnimation: true,
-                  maintainSize: true,
-                  child: TweenAnimationBuilder(
-                      tween: Tween<double>(begin: 1, end: 0),
-                      duration: Duration(
-                          seconds: data[widget.questionNo! - 1]['time']),
-                      builder: (context, double value, _) {
-                        return LinearProgressIndicator(
-                          minHeight: 7,
-                          value: value,
-                          backgroundColor: Colors.black,
-                          valueColor: controller!.drive(
-                              ColorTween(begin: Colors.white, end: Colors.red)),
-                        );
-                      }),
+                LinearProgressIndicator(
+                  minHeight: 7,
+                  value: valAnimation.value,
+                  backgroundColor: Colors.black,
+                  valueColor: controller!
+                      .drive(ColorTween(begin: Colors.white, end: Colors.red)),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 5, bottom: 10),
