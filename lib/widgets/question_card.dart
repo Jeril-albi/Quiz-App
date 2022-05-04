@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/models/data_model.dart';
-import 'package:quiz_app/screens/home.dart';
 import 'package:quiz_app/screens/question_no.dart';
 
 class QuestionCard extends StatefulWidget {
@@ -26,6 +27,7 @@ class QuestionCard extends StatefulWidget {
 class _QuestionCardState extends State<QuestionCard> {
   bool visible = true;
   int? selectedIndex;
+  List? data = [];
 
   Color? cardColor() {
     switch (widget.index) {
@@ -92,6 +94,7 @@ class _QuestionCardState extends State<QuestionCard> {
     });
     if (context.read<DataModel>().isBtnPressed) {
     } else {
+      pageNaviTimer!.cancel();
       context.read<DataModel>().btnPressed(true);
       context.read<DataModel>().changeQuestNo();
       context.read<DataModel>().wrongAnsCheck(false);
@@ -100,6 +103,7 @@ class _QuestionCardState extends State<QuestionCard> {
       if (widget.correctAnswer!) {
         showAnsStatusPopUp("Correct", Colors.green);
         context.read<DataModel>().changeContainerWidth(widget.correctAnswer!);
+        context.read<DataModel>().rankChange();
       } else {
         context.read<DataModel>().wrongAnsCheck(true);
         showAnsStatusPopUp("Wrong", Colors.redAccent.shade700);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/models/data_model.dart';
+import 'package:quiz_app/screens/countdown.dart';
 import 'package:quiz_app/screens/question_no.dart';
 
 class Result extends StatelessWidget {
@@ -68,8 +69,10 @@ class Result extends StatelessWidget {
                         color: Colors.black54),
                     child: Center(
                       child: Text(
-                        "Rank: 3/22",
-                        style: TextStyle(
+                        context.read<DataModel>().rank == null
+                            ? "Rank: 22/22"
+                            : "Rank: ${context.read<DataModel>().rank}/22",
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 15,
                             fontWeight: FontWeight.bold),
@@ -84,8 +87,8 @@ class Result extends StatelessWidget {
                         color: Colors.black54),
                     child: Center(
                       child: Text(
-                        "Score: 2250",
-                        style: TextStyle(
+                        "Score: ${context.read<DataModel>().score.toInt()}",
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 15,
                             fontWeight: FontWeight.bold),
@@ -137,8 +140,8 @@ class Result extends StatelessWidget {
                         color: Colors.green),
                     child: Center(
                       child: Text(
-                        "3 Correct",
-                        style: TextStyle(
+                        "${context.read<DataModel>().crctAns} Correct",
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 15,
                             fontWeight: FontWeight.bold),
@@ -153,8 +156,8 @@ class Result extends StatelessWidget {
                         color: Colors.red),
                     child: Center(
                       child: Text(
-                        "2 Wrong",
-                        style: TextStyle(
+                        "${context.read<DataModel>().wrngAns} Wrong",
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 15,
                             fontWeight: FontWeight.bold),
@@ -162,7 +165,7 @@ class Result extends StatelessWidget {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+
+Timer? pageNaviTimer;
 
 class DataModel extends ChangeNotifier {
   List baseData = [];
@@ -11,6 +14,9 @@ class DataModel extends ChangeNotifier {
   bool wrongAns = false;
   int questionNo = 1;
   int streak = 0;
+  int rank = 0;
+  double score = 0;
+  int crctAns = 0, wrngAns = 0;
 
   Future<void> readJson() async {
     String response = await rootBundle.loadString('assets/data/quiz_data.json');
@@ -55,9 +61,12 @@ class DataModel extends ChangeNotifier {
           notifyListeners();
       }
       streak++;
+      crctAns++;
+      score += 814;
     } else {
       containerWidth = 0;
       streak = 0;
+      wrngAns++;
       notifyListeners();
     }
   }
@@ -74,5 +83,21 @@ class DataModel extends ChangeNotifier {
       questionNo = 1;
     }
     notifyListeners();
+  }
+
+  void nonAnsselected() {
+    btnPressed(true);
+    changeQuestNo();
+    wrongAnsCheck(true);
+    btnColorChange(true);
+    changeContainerWidth(false);
+  }
+
+  void rankChange() {
+    if (rank == 0) {
+      rank = 9;
+    } else {
+      rank -= 2;
+    }
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:countup/countup.dart';
+import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +18,20 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   AnimationController? controller;
-  Timer? timer;
+
+  void nonAnsSelect() async {
+    context.read<DataModel>().nonAnsselected();
+    await Future.delayed(const Duration(seconds: 2));
+    Navigator.pushReplacement(
+        context,
+        PageTransition(
+            child: QuestionNumber(
+                questionNo: context.read<DataModel>().questionNo),
+            type: PageTransitionType.rightToLeft,
+            duration: const Duration(milliseconds: 800)));
+    context.read<DataModel>().btnPressed(false);
+    context.read<DataModel>().btnColorChange(false);
+  }
 
   @override
   void initState() {
@@ -29,33 +42,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ['time']),
         vsync: this);
     controller!.repeat();
-    timer = Timer.periodic(
+    pageNaviTimer = Timer(
         Duration(
             seconds: context.read<DataModel>().baseData[widget.questionNo! - 1]
-                ['time']), (t) async {
-      context.read<DataModel>().btnPressed(true);
-      context.read<DataModel>().changeQuestNo();
-      context.read<DataModel>().wrongAnsCheck(true);
-      context.read<DataModel>().btnColorChange(true);
-      context.read<DataModel>().changeContainerWidth(false);
-      await Future.delayed(const Duration(seconds: 2));
-      Navigator.pushReplacement(
-          context,
-          PageTransition(
-              child: QuestionNumber(
-                  questionNo: context.read<DataModel>().questionNo),
-              type: PageTransitionType.rightToLeft,
-              duration: const Duration(milliseconds: 800)));
-      context.read<DataModel>().btnPressed(false);
-      context.read<DataModel>().btnColorChange(false);
+                ['time']), () {
+      nonAnsSelect();
     });
   }
 
   @override
   void dispose() {
     controller!.dispose();
-    timer!.cancel();
     super.dispose();
+    pageNaviTimer!.cancel();
   }
 
   @override
@@ -193,9 +192,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               color: Colors.purple[300],
                               size: 20,
                             ),
-                            const Text(
-                              '10th',
-                              style: TextStyle(
+                            AnimatedFlipCounter(
+                              value: context.read<DataModel>().rank == 0
+                                  ? 0
+                                  : context.read<DataModel>().rank,
+                              suffix: 'th',
+                              duration: const Duration(seconds: 1),
+                              curve: Curves.easeInBack,
+                              textStyle: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold),
@@ -221,11 +225,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               color: Colors.yellow,
                               size: 18,
                             ),
-                            Countup(
-                                begin: 0,
-                                end: 870,
-                                duration: const Duration(seconds: 2),
-                                style: const TextStyle(
+                            AnimatedFlipCounter(
+                                value: context.read<DataModel>().score,
+                                duration: const Duration(seconds: 1),
+                                textStyle: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold))
