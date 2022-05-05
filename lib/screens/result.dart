@@ -68,14 +68,16 @@ class Result extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.black54),
                     child: Center(
-                      child: Text(
-                        context.read<DataModel>().rank == null
-                            ? "Rank: 22/22"
-                            : "Rank: ${context.read<DataModel>().rank}/22",
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
+                      child: Consumer<DataModel>(
+                        builder: (context, value, child) => Text(
+                          value.rank == 0
+                              ? "Rank: 22/22"
+                              : "Rank: ${value.rank}/22",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
@@ -86,12 +88,14 @@ class Result extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.black54),
                     child: Center(
-                      child: Text(
-                        "Score: ${context.read<DataModel>().score.toInt()}",
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
+                      child: Consumer<DataModel>(
+                        builder: (context, value, child) => Text(
+                          "Score: ${value.score.toInt()}",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
@@ -103,27 +107,29 @@ class Result extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: 50,
-                child: ElevatedButton(
-                    onPressed: () {
-                      context.read<DataModel>().resetData();
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        PageTransition(
-                            child: CountDown(),
-                            type: PageTransitionType.rotate,
-                            alignment: Alignment.center,
-                            duration: const Duration(milliseconds: 800)),
-                        (route) => false,
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(primary: Colors.purple),
-                    child: const Text(
-                      'Play Agan',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    )),
+                child: Consumer<DataModel>(
+                  builder: (context, value, child) => ElevatedButton(
+                      onPressed: () {
+                        value.resetData();
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          PageTransition(
+                              child: CountDown(),
+                              type: PageTransitionType.rotate,
+                              alignment: Alignment.center,
+                              duration: const Duration(milliseconds: 800)),
+                          (route) => false,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(primary: Colors.purple),
+                      child: const Text(
+                        'Play Agan',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      )),
+                ),
               ),
               const SizedBox(
                 height: 10,
@@ -138,12 +144,14 @@ class Result extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.green),
                     child: Center(
-                      child: Text(
-                        "${context.read<DataModel>().crctAns} Correct",
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
+                      child: Consumer<DataModel>(
+                        builder: (context, value, child) => Text(
+                          "${value.crctAns} Correct",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
@@ -154,12 +162,14 @@ class Result extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.red),
                     child: Center(
-                      child: Text(
-                        "${context.read<DataModel>().wrngAns} Wrong",
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
+                      child: Consumer<DataModel>(
+                        builder: (context, value, child) => Text(
+                          "${value.wrngAns} Wrong",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),

@@ -41,17 +41,17 @@ class _QuestionNumberState extends State<QuestionNumber> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<DataModel>().readJson();
     return Scaffold(
       backgroundColor: Colors.purple[900],
       body: Center(
-        child: Text(
-          widget.questionNo! <=
-                  context.read<DataModel>().baseData.quizData!.length
-              ? "${widget.questionNo}"
-              : "THE END",
-          style: const TextStyle(
-              color: Colors.white, fontSize: 50, fontWeight: FontWeight.bold),
+        child: Consumer<DataModel>(
+          builder: (context, value, child) => Text(
+            widget.questionNo! <= value.baseData.quizData!.length
+                ? "${widget.questionNo}"
+                : "THE END",
+            style: const TextStyle(
+                color: Colors.white, fontSize: 50, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );

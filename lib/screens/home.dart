@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/models/data_model.dart';
-import 'package:quiz_app/models/json_model.dart';
 import 'package:quiz_app/screens/question_no.dart';
 import 'package:quiz_app/widgets/question_card.dart';
 
@@ -66,14 +65,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     controller!.dispose();
-    valAnimation.removeStatusListener((status) {});
     super.dispose();
     pageNaviTimer!.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    final JsonModel data = context.read<DataModel>().baseData;
+    print('Rebuild');
     return Scaffold(
         body: SafeArea(
             child: Container(
@@ -105,25 +103,31 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             borderRadius: BorderRadius.circular(5)),
                         margin: const EdgeInsets.only(right: 5),
                         child: Center(
-                          child: Text(
-                              '${widget.questionNo}/${data.quizData!.length}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                              )),
+                          child: Consumer<DataModel>(
+                            builder: (context, value, child) => Text(
+                                '${widget.questionNo}/${value.baseData.quizData!.length}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                )),
+                          ),
                         ),
                       ),
                       Stack(
                         children: [
-                          AnimatedContainer(
-                            height: 35,
-                            width: context.watch<DataModel>().containerWidth,
-                            duration: const Duration(seconds: 1),
-                            padding: const EdgeInsets.symmetric(horizontal: 2),
-                            decoration: BoxDecoration(
-                                color: Colors.yellow.shade800,
-                                border: Border.all(
-                                    width: 1.5, color: Colors.grey.shade700),
-                                borderRadius: BorderRadius.circular(6)),
+                          Consumer<DataModel>(
+                            builder: (context, value, child) =>
+                                AnimatedContainer(
+                              height: 35,
+                              width: value.containerWidth,
+                              duration: const Duration(seconds: 1),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2),
+                              decoration: BoxDecoration(
+                                  color: Colors.yellow.shade800,
+                                  border: Border.all(
+                                      width: 1.5, color: Colors.grey.shade700),
+                                  borderRadius: BorderRadius.circular(6)),
+                            ),
                           ),
                           Container(
                             height: 35,
@@ -161,11 +165,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       color: Colors.white,
                                       size: 15,
                                     ),
-                                    Text(
-                                      '${context.read<DataModel>().streak}',
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500),
+                                    Consumer<DataModel>(
+                                      builder: (context, value, child) => Text(
+                                        value.streak.toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
+                                      ),
                                     )
                                   ],
                                 )
@@ -193,17 +199,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               color: Colors.purple[300],
                               size: 20,
                             ),
-                            AnimatedFlipCounter(
-                              value: context.read<DataModel>().rank == 0
-                                  ? 0
-                                  : context.read<DataModel>().rank,
-                              suffix: 'th',
-                              duration: const Duration(seconds: 1),
-                              curve: Curves.easeInBack,
-                              textStyle: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
+                            Consumer<DataModel>(
+                              builder: (context, value, child) =>
+                                  AnimatedFlipCounter(
+                                value: value.rank == 0 ? 0 : value.rank,
+                                suffix: 'th',
+                                duration: const Duration(seconds: 1),
+                                curve: Curves.easeInBack,
+                                textStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             )
                           ],
                         ),
@@ -226,13 +233,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               color: Colors.yellow,
                               size: 18,
                             ),
-                            AnimatedFlipCounter(
-                                value: context.read<DataModel>().score,
-                                duration: const Duration(seconds: 1),
-                                textStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold))
+                            Consumer<DataModel>(
+                              builder: (context, value, child) =>
+                                  AnimatedFlipCounter(
+                                      value: value.score,
+                                      duration: const Duration(seconds: 1),
+                                      textStyle: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                            )
                           ],
                         ),
                       )
@@ -257,26 +267,33 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   width: MediaQuery.of(context).size.width,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-                  child: Text(
-                    "${data.quizData![widget.questionNo! - 1].question}",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                  child: Consumer<DataModel>(
+                    builder: (context, value, child) => Text(
+                      "${value.baseData.quizData![widget.questionNo! - 1].question}",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
                   ),
                 ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount:
-                      data.quizData![widget.questionNo! - 1].options!.length,
-                  itemBuilder: (_, index) => QuestionCard(
-                    index: index,
-                    optionName:
-                        "${data.quizData![widget.questionNo! - 1].options![index].option}",
-                    correctAnswer: data.quizData![widget.questionNo! - 1]
-                        .options![index].correct,
-                    questNo: widget.questionNo,
+                Consumer<DataModel>(
+                  builder: (context, value, child) => ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: value.baseData.quizData![widget.questionNo! - 1]
+                        .options!.length,
+                    itemBuilder: (_, index) => QuestionCard(
+                      index: index,
+                      optionName:
+                          "${value.baseData.quizData![widget.questionNo! - 1].options![index].option}",
+                      correctAnswer: value
+                          .baseData
+                          .quizData![widget.questionNo! - 1]
+                          .options![index]
+                          .correct,
+                      questNo: widget.questionNo,
+                    ),
                   ),
                 ),
               ],

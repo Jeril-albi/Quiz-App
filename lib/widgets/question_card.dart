@@ -100,37 +100,37 @@ class _QuestionCardState extends State<QuestionCard> {
       onTap: () {
         ansBtnClick(widget.index!);
       },
-      child: Visibility(
-        visible: context.watch<DataModel>().isBtnPressed
-            ? context.watch<DataModel>().wrongAns
-                ? true
-                : checkVisibility()!
-            : true,
-        maintainState: true,
-        maintainAnimation: true,
-        maintainSize: true,
-        child: Container(
-            height: 80,
-            width: double.infinity,
-            margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            decoration: BoxDecoration(
-                color: context.watch<DataModel>().colorChange
-                    ? changeCardColor()
-                    : cardColor(),
-                borderRadius: BorderRadius.circular(5),
-                border: context.watch<DataModel>().colorChange
-                    ? Border.all(color: Colors.white, width: 2)
-                    : Border.all(color: Colors.transparent)),
-            child: Center(
-              child: Text(
-                widget.optionName!,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-            )),
+      child: Consumer<DataModel>(
+        builder: (context, value, child) => Visibility(
+          visible: value.isBtnPressed
+              ? value.wrongAns
+                  ? true
+                  : checkVisibility()!
+              : true,
+          maintainState: true,
+          maintainAnimation: true,
+          maintainSize: true,
+          child: Container(
+              height: 80,
+              width: double.infinity,
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                  color: value.colorChange ? changeCardColor() : cardColor(),
+                  borderRadius: BorderRadius.circular(5),
+                  border: value.colorChange
+                      ? Border.all(color: Colors.white, width: 2)
+                      : Border.all(color: Colors.transparent)),
+              child: Center(
+                child: Text(
+                  widget.optionName!,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+              )),
+        ),
       ),
     );
   }
